@@ -1,4 +1,4 @@
-package com.myshopping;
+package com.tasklistTeste;
 
 import android.os.Bundle;
 
