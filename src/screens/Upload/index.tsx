@@ -58,7 +58,7 @@ export function Upload() {
 
   return (
     <Container>
-      <Header title="Lista de compras" />
+      <Header title="Upload de Fotos" />
 
       <Content>
         <Photo uri={image} onPress={handlePickImage} />
