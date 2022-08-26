@@ -48,7 +48,11 @@ export function Upload() {
         setBytesTransferidos(`${taskSpashot.bytesTransferred} transferido de ${taskSpashot.totalBytes}`)
       });
 
-      uploadTask.then(() => Alert.alert('Upload concluído com sucesso'));
+      uploadTask.then( async () =>{
+        const imageUrl = await reference.getDownloadURL();
+        console.log(imageUrl); // salvar essa url da imagem
+        Alert.alert('Upload concluído com sucesso');
+      } );
       
      
     }
