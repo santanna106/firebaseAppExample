@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 import { Container, Account, Title, Subtitle } from './styles';
 import { ButtonText } from '../../components/ButtonText';
@@ -6,6 +8,45 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 
 export function SignIn() {
+
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+
+  async function handleSignInAnonymously(){
+    const { user } = await auth().signInAnonymously();
+  }
+
+  function handleCreateUserAccount(){
+     auth()
+    .createUserWithEmailAndPassword(email,password)
+    .then(() => Alert.alert('Usuário criado com sucesso!'))
+    .catch(error => { 
+      console.log(error.code)
+
+      //https://firebase.google.com/docs/auth/admin/errors
+      if(error.code == 'auth/invalid-email'){
+        Alert.alert('E-mail não disponível. Escolha outro e-mail para cadastrar!')
+      }
+    });
+  }
+
+  function handleSignInEmailAnPassword(){
+    auth()
+    .signInWithEmailAndPassword(email,password)
+    .then(({ user }) => console.log(user))
+    .catch(error => { 
+      console.log(error.code)
+
+      if(error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password'){
+        Alert.alert('Usuário não encontrado. E-mail e/ou senha inválida!');
+      }
+    
+    
+    });
+
+  }
+
+
   return (
     <Container>
       <Title>MyShopping</Title>
@@ -14,18 +55,20 @@ export function SignIn() {
       <Input
         placeholder="e-mail"
         keyboardType="email-address"
+        onChangeText={setEmail}
       />
 
       <Input
         placeholder="senha"
         secureTextEntry
+        onChangeText={setPassword}
       />
 
-      <Button title="Entrar" onPress={() => { }} />
+      <Button title="Entrar" onPress={handleSignInEmailAnPassword} />
 
       <Account>
         <ButtonText title="Recuperar senha" onPress={() => { }} />
-        <ButtonText title="Criar minha conta" onPress={() => { }} />
+        <ButtonText title="Criar minha conta" onPress={handleCreateUserAccount} />
       </Account>
     </Container>
   );
